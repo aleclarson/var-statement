@@ -2,7 +2,7 @@
   var Finder, LocalVar, NamedFunction, VarStatement, mergeOptionsInto, splice,
     slice = [].slice;
 
-  require("../../../lotus-require");
+  require("lotus-require");
 
   NamedFunction = require("named-function");
 
@@ -70,35 +70,34 @@
   };
 
   VarStatement.prototype.remove = function() {
-    var contents, i, len, lvar, lvars, names, removedCharCount, result, varCount;
+    var contents, i, len, lvar, names, removedCharCount, result, varCount, vars;
     names = 1 <= arguments.length ? slice.call(arguments, 0) : [];
     removedCharCount = 0;
     result = this.origin;
-    varCount = this.varCount - names.length;
-    lvars = names.map((function(_this) {
+    vars = names.map((function(_this) {
       return function(name) {
         return _this.vars[name];
       };
-    })(this));
-    lvars = lvars.sort(function(a, b) {
+    })(this)).filter(function(lvar) {
+      return lvar != null;
+    }).sort(function(a, b) {
       if (a.position > b.position) {
         return 1;
       } else {
         return -1;
       }
     });
-    for (i = 0, len = lvars.length; i < len; i++) {
-      lvar = lvars[i];
-      if (varCount === 0) {
-        result = splice(this.origin, this.startIndex, this.endIndex + 1);
-        break;
-      } else {
-        contents = this.getContents(lvar);
-        contents.startIndex -= removedCharCount;
-        contents.endIndex -= removedCharCount;
-        removedCharCount += contents.length;
-        result = splice(result, contents.startIndex, contents.endIndex);
-      }
+    varCount = this.varCount - vars.length;
+    if (varCount === 0) {
+      return splice(this.origin, this.startIndex, this.endIndex + 1);
+    }
+    for (i = 0, len = vars.length; i < len; i++) {
+      lvar = vars[i];
+      contents = this.getContents(lvar);
+      contents.startIndex -= removedCharCount;
+      contents.endIndex -= removedCharCount;
+      removedCharCount += contents.length;
+      result = splice(result, contents.startIndex, contents.endIndex);
     }
     return result;
   };

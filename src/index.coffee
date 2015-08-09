@@ -1,5 +1,5 @@
 
-require "../../../lotus-require"
+require "lotus-require"
 NamedFunction = require "named-function"
 Finder = require "finder"
 
@@ -57,19 +57,18 @@ VarStatement.options =
 VarStatement::remove = (names...) ->
   removedCharCount = 0
   result = @origin
-  varCount = @varCount - names.length
-  lvars = names.map (name) => @vars[name]
-  lvars = lvars.sort (a, b) -> if a.position > b.position then 1 else -1
-  for lvar in lvars
-    if varCount is 0
-      result = splice @origin, @startIndex, @endIndex + 1
-      break
-    else
-      contents = @getContents lvar
-      contents.startIndex -= removedCharCount
-      contents.endIndex -= removedCharCount
-      removedCharCount += contents.length
-      result = splice result, contents.startIndex, contents.endIndex
+  vars = names.map (name) => @vars[name]
+  .filter (lvar) -> lvar?
+  .sort (a, b) -> if a.position > b.position then 1 else -1
+  varCount = @varCount - vars.length
+  if varCount is 0
+    return splice @origin, @startIndex, @endIndex + 1
+  for lvar in vars
+    contents = @getContents lvar
+    contents.startIndex -= removedCharCount
+    contents.endIndex -= removedCharCount
+    removedCharCount += contents.length
+    result = splice result, contents.startIndex, contents.endIndex
   result
 
 # Returns the full contents of a specific variable inside this statement.

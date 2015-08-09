@@ -1,8 +1,8 @@
 
-# var-statement v1.0.0 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
+# var-statement v1.0.1 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
 
 ```sh
-npm install aleclarson/var-statement#1.0.0
+npm install aleclarson/var-statement#1.0.1
 ```
 
 usage
@@ -31,3 +31,22 @@ All tests are passing! Find out for yourself:
 npm install -g jasmine-node
 npm test
 ```
+
+changelog
+---------
+
+#### 1.0.1
+
+&nbsp;&nbsp;
+**\+** Fix major bug with removing multiple variables at once
+
+&nbsp;&nbsp;
+**\+** Remove accidental relative module path
+
+&nbsp;&nbsp;
+**\+** Add missing dependencies to `package.json`
+
+#### 1.0.0
+
+&nbsp;&nbsp;
+**\+** Initial release
