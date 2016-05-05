@@ -1,52 +1,10 @@
 
-# var-statement v1.0.1 [![stable](http://badges.github.io/stability-badges/dist/stable.svg)](http://github.com/badges/stability-badges)
+# var-statement 1.0.2 ![stable](https://img.shields.io/badge/stability-stable-4EBA0F.svg?style=flat)
 
-```sh
-npm install aleclarson/var-statement#1.0.1
-```
+Only works for Javascript that:
 
-usage
------
+- only has `var` statements at the start of a function
 
-```CoffeeScript
-Function.fromString = (string) -> eval "(function () { return " + inner + "; })()"
+- always includes a `;` at the end of a line
 
-myFunc = `function () { var hello, foo, test, bar, world; }`
-
-VarStatement = require "var-statement"
-
-statement = VarStatement.first myFunc
-
-newFunc = Function.fromString statement.remove "world", "hello", "test"
-
-newFunc.toString() # "function () { var foo, bar; }"
-```
-
-tests
------
-
-All tests are passing! Find out for yourself:
-
-```sh
-npm install -g jasmine-node
-npm test
-```
-
-changelog
----------
-
-#### 1.0.1
-
-&nbsp;&nbsp;
-**\+** Fix major bug with removing multiple variables at once
-
-&nbsp;&nbsp;
-**\+** Remove accidental relative module path
-
-&nbsp;&nbsp;
-**\+** Add missing dependencies to `package.json`
-
-#### 1.0.0
-
-&nbsp;&nbsp;
-**\+** Initial release
+- never uses empty `var` statements
