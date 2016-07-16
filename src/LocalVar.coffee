@@ -1,17 +1,25 @@
 
-Factory = require "factory"
+fromArgs = require "fromArgs"
 Finder = require "finder"
+Type = require "Type"
 
-module.exports = Factory "LocalVar",
+type = Type "LocalVar"
 
-  optionTypes:
-    name: String     # The variable name.
-    position: Number # The variable list index.
-    endIndex: Number # The last character index of the variable name.
+type.optionTypes =
+  name: String     # The variable name.
+  position: Number # The variable list index.
+  endIndex: Number # The last character index of the variable name.
 
-  initValues: (options) ->
-    return options
+type.defineValues
 
-  statics: {
-    find: Finder /[^\,\;\s]+/
-  }
+  name: fromArgs "name"
+
+  position: fromArgs "position"
+
+  endIndex: fromArgs "endIndex"
+
+type.defineStatics
+
+  find: Finder /[^\,\;\s]+/
+
+module.exports = type.build()

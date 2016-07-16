@@ -1,54 +1,71 @@
-var Factory, Finder, LocalVar, SortedArray, VarStatement, assertType, isType, ref, splice;
-
-ref = require("type-utils"), isType = ref.isType, assertType = ref.assertType;
+var Finder, LocalVar, SortedArray, Type, VarStatement, assertType, isType, splice, type;
 
 SortedArray = require("sorted-array");
 
-Factory = require("factory");
+assertType = require("assertType");
 
 Finder = require("finder");
 
+isType = require("isType");
+
+Type = require("Type");
+
 LocalVar = require("./LocalVar");
 
-module.exports = VarStatement = Factory("VarStatement", {
-  optionTypes: {
-    endIndex: Number,
-    contents: String,
-    source: String
-  },
-  customValues: {
-    startIndex: {
-      lazy: function() {
-        return this.endIndex - this.contents.length - 4;
-      }
+type = Type("VarStatement");
+
+type.optionTypes = {
+  endIndex: Number,
+  contents: String,
+  source: String
+};
+
+type.defineProperties({
+  startIndex: {
+    lazy: function() {
+      return this.endIndex - this.contents.length - 4;
     }
+  }
+});
+
+type.defineFrozenValues({
+  endIndex: function(options) {
+    return options.endIndex;
   },
-  initFrozenValues: function(options) {
-    return options;
+  contents: function(options) {
+    return options.contents;
   },
-  initValues: function() {
-    return {
-      nodeCount: 0,
-      nodeMap: {}
-    };
-  },
-  init: function() {
-    var endIndex, name, position;
-    LocalVar.find.target = this.contents;
-    while (true) {
-      name = LocalVar.find.next();
-      if (!name) {
-        break;
-      }
-      position = this.nodeCount++;
-      endIndex = LocalVar.find.offset;
-      this.nodeMap[name] = LocalVar({
-        name: name,
-        position: position,
-        endIndex: endIndex
-      });
+  source: function(options) {
+    return options.source;
+  }
+});
+
+type.defineValues({
+  nodeCount: 0,
+  nodeMap: function() {
+    return {};
+  }
+});
+
+type.initInstance(function() {
+  var endIndex, name, position;
+  LocalVar.find.target = this.contents;
+  while (true) {
+    name = LocalVar.find.next();
+    if (!name) {
+      break;
     }
-  },
+    position = this.nodeCount++;
+    endIndex = LocalVar.find.offset;
+    this.nodeMap[name] = LocalVar({
+      name: name,
+      position: position,
+      endIndex: endIndex
+    });
+  }
+});
+
+type.defineMethods({
   remove: function(names) {
     var contents, i, j, len, len1, name, newNodeCount, node, nodes, removedCharCount, result;
     if (!Array.isArray(names)) {
@@ -97,31 +114,34 @@ module.exports = VarStatement = Factory("VarStatement", {
       contents.startIndex -= 2;
     }
     return contents;
-  },
-  statics: {
-    find: Finder({
-      regex: /var ([^\;]+)/,
-      group: 1
-    }),
-    first: function(source) {
-      var contents;
-      if (isType(source, Function)) {
-        source = source.toString();
-      } else {
-        assertType(source, String);
-      }
-      contents = VarStatement.find(source);
-      if (!contents) {
-        return null;
-      }
-      return VarStatement({
-        source: source,
-        contents: contents,
-        endIndex: VarStatement.find.offset
-      });
-    }
   }
 });
+
+type.defineStatics({
+  find: Finder({
+    regex: /var ([^\;]+)/,
+    group: 1
+  }),
+  first: function(source) {
+    var contents;
+    if (isType(source, Function)) {
+      source = source.toString();
+    } else {
+      assertType(source, String);
+    }
+    contents = VarStatement.find(source);
+    if (!contents) {
+      return null;
+    }
+    return VarStatement({
+      source: source,
+      contents: contents,
+      endIndex: VarStatement.find.offset
+    });
+  }
+});
+
+module.exports = VarStatement = type.build();
 
 splice = function(string, start, end) {
   var slices;
@@ -131,4 +151,4 @@ splice = function(string, start, end) {
   return slices.join("");
 };
 
-//# sourceMappingURL=../../map/src/VarStatement.map
+//# sourceMappingURL=map/VarStatement.map

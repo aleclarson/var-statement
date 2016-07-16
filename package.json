@@ -1,10 +1,14 @@
 {
   "name": "var-statement",
-  "version": "1.0.2",
-  "main": "js/src/VarStatement",
+  "version": "2.0.0",
+  "main": "js/VarStatement",
   "dependencies": {
-    "NamedFunction": "aleclarson/NamedFunction#2.0.0",
-    "finder": "aleclarson/finder#1.0.0"
+    "Type": "aleclarson/Type#1.0.0",
+    "assertType": "aleclarson/assertType#1.0.0",
+    "finder": "aleclarson/finder#1.0.0",
+    "fromArgs": "aleclarson/fromArgs#1.0.0",
+    "isType": "aleclarson/isType#1.0.0",
+    "sorted-array": "aleclarson/sorted-array#2.0.0"
   },
   "repository": {
     "type": "git",

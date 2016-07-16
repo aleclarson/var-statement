@@ -1,43 +1,49 @@
 
-{ isType, assertType } = require "type-utils"
-
 SortedArray = require "sorted-array"
-Factory = require "factory"
+assertType = require "assertType"
 Finder = require "finder"
+isType = require "isType"
+Type = require "Type"
 
 LocalVar = require "./LocalVar"
 
-module.exports =
-VarStatement = Factory "VarStatement",
+type = Type "VarStatement"
 
-  optionTypes:
-    endIndex: Number
-    contents: String
-    source: String
+type.optionTypes =
+  endIndex: Number
+  contents: String
+  source: String
 
-  customValues:
+type.defineProperties
 
-    startIndex: lazy: ->
-      @endIndex - @contents.length - 4
+  startIndex: lazy: ->
+    @endIndex - @contents.length - 4
 
-  initFrozenValues: (options) ->
-    return options
+type.defineFrozenValues
 
-  initValues: ->
+  endIndex: (options) -> options.endIndex
 
-    nodeCount: 0
+  contents: (options) -> options.contents
 
-    nodeMap: {} # Variables by name.
+  source: (options) -> options.source
 
-  init: ->
-    LocalVar.find.target = @contents
-    loop
-      name = LocalVar.find.next()
-      break unless name
-      position = @nodeCount++
-      endIndex = LocalVar.find.offset
-      @nodeMap[name] = LocalVar { name, position, endIndex }
-    return
+type.defineValues
+
+  nodeCount: 0
+
+  nodeMap: -> {} # Variables by name.
+
+type.initInstance ->
+  LocalVar.find.target = @contents
+  loop
+    name = LocalVar.find.next()
+    break unless name
+    position = @nodeCount++
+    endIndex = LocalVar.find.offset
+    @nodeMap[name] = LocalVar { name, position, endIndex }
+  return
+
+type.defineMethods
 
   remove: (names) ->
 
@@ -79,25 +85,27 @@ VarStatement = Factory "VarStatement",
     else contents.startIndex -= 2
     contents
 
-  statics:
+type.defineStatics
 
-    find: Finder
-      regex: /var ([^\;]+)/
-      group: 1
+  find: Finder
+    regex: /var ([^\;]+)/
+    group: 1
 
-    first: (source) ->
+  first: (source) ->
 
-      if isType source, Function
-        source = source.toString()
-      else assertType source, String
+    if isType source, Function
+      source = source.toString()
+    else assertType source, String
 
-      contents = VarStatement.find source
-      return null unless contents
+    contents = VarStatement.find source
+    return null unless contents
 
-      return VarStatement
-        source: source
-        contents: contents
-        endIndex: VarStatement.find.offset
+    return VarStatement
+      source: source
+      contents: contents
+      endIndex: VarStatement.find.offset
+
+module.exports = VarStatement = type.build()
 
 splice = (string, start, end) ->
   slices = []
