@@ -5,10 +5,10 @@ Type = require "Type"
 
 type = Type "LocalVar"
 
-type.optionTypes =
-  name: String     # The variable name.
-  position: Number # The variable list index.
-  endIndex: Number # The last character index of the variable name.
+type.defineOptions
+  name: String.isRequired     # The variable name.
+  position: Number.isRequired # The variable list index.
+  endIndex: Number.isRequired # The last character index of the variable name.
 
 type.defineValues
 
