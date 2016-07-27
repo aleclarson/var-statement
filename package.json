@@ -5,7 +5,7 @@
   "dependencies": {
     "Type": "aleclarson/Type#1.0.0",
     "assertType": "aleclarson/assertType#1.0.0",
-    "finder": "aleclarson/finder#1.0.0",
+    "finder": "aleclarson/finder#2.0.1",
     "fromArgs": "aleclarson/fromArgs#1.0.0",
     "isType": "aleclarson/isType#1.0.0",
     "sorted-array": "aleclarson/sorted-array#2.0.0"
