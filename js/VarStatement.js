@@ -14,11 +14,11 @@ LocalVar = require("./LocalVar");
 
 type = Type("VarStatement");
 
-type.optionTypes = {
-  endIndex: Number,
-  contents: String,
-  source: String
-};
+type.defineOptions({
+  endIndex: Number.isRequired,
+  contents: String.isRequired,
+  source: String.isRequired
+});
 
 type.defineProperties({
   startIndex: {

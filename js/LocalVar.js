@@ -8,11 +8,11 @@ Type = require("Type");
 
 type = Type("LocalVar");
 
-type.optionTypes = {
-  name: String,
-  position: Number,
-  endIndex: Number
-};
+type.defineOptions({
+  name: String.isRequired,
+  position: Number.isRequired,
+  endIndex: Number.isRequired
+});
 
 type.defineValues({
   name: fromArgs("name"),
